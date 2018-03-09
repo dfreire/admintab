@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "out",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "lib": [
+      "es2015"
+    ]
+  },
+  "include": [
+    "src/**/*"
+  ]
+}
