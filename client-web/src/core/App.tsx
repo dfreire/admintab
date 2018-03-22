@@ -37,9 +37,16 @@ class AppView extends React.Component<Props, State> {
 	}
 
 	render() {
+		const tokens = this.props.location.pathname.split('/').filter(t => t.length > 0);
+		if (tokens.length > 0) {
+			tokens.pop();
+		}
+		const urlUp = '/' + tokens.join('/');
+		console.log('urlUp', urlUp);
+
 		return (
 			<div>
-				{this.props.location.pathname !== '/' && <Link to="..">..</Link>}
+				<Link to={urlUp}>up - {urlUp}</Link>
 				<h3> {this.props.location.pathname} </h3>
 				{this._renderContent()}
 			</div>
