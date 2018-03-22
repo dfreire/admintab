@@ -17,17 +17,20 @@ app.use(bodyParser.json());
 
 const jwtMiddleware = createJwtMiddleware();
 
-app.get('/content/*', async (req: express.Request, res: express.Response) => {
-	const _path = req.params[0];
-	const items = await sh.ls('-l', path.join(userDir, 'content', _path));
+app.get('/api/content/*', async (req: express.Request, res: express.Response) => {
+	const pathname = req.params[0];
+	const items = await sh.ls('-l', path.join(userDir, 'content', pathname));
 	if (items.length === 1 && items[0]['name'].endsWith('.json')) {
 		res.sendFile(items[0]['name']);
 	} else {
-		res.send(items.map(item => item['name']));
+		res.send({
+			type: 'Folder',
+			content: items.map(item => item['name']),
+		});
 	}
 });
 
-app.get('/types/:type', (req: express.Request, res: express.Response) => {
+app.get('/api/types/:type', (req: express.Request, res: express.Response) => {
 	const { type } = req.params;
 	res.sendFile(path.join(userDir, 'types', `${type}.json`));
 });

@@ -1,18 +1,16 @@
 import * as React from 'react';
-import { Model, Field, TextField } from './model/Model';
+import { File, Field, TextField } from './Types';
 
-export interface NodeProps {
-	model: Model;
+interface Props {
+	pathname: string;
+	file: File;
 }
 
-export class Node extends React.Component<NodeProps, {}> {
-	state = {
-	};
-
+export class FileView extends React.Component<Props, {}> {
 	render() {
 		return (
 			<div>
-				{this.props.model.map(this._renderField)}
+				{this.props.file.type}
 			</div>
 		);
 	}
@@ -30,7 +28,10 @@ export class Node extends React.Component<NodeProps, {}> {
 		return (
 			<div>
 				<label>{field.label}</label>
-				<input type="text" />
+				<input
+					type="text"
+					value={this.props.file.content[field.key]}
+				/>
 			</div>
 		);
 	}

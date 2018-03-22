@@ -1,4 +1,14 @@
-export type Model = Field[];
+export interface Folder {
+	type: 'Folder';
+	content: string[];
+}
+
+export interface File {
+	type: string;
+	content: object;
+}
+
+export type FileType = Field[];
 
 export interface Field {
 	type: 'text';
