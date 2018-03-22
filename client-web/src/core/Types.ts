@@ -8,8 +8,6 @@ export interface File {
 	content: object;
 }
 
-export type FileType = Field[];
-
 export interface Field {
 	type: 'text';
 	key: string;
