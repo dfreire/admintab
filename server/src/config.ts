@@ -4,6 +4,7 @@ export interface Config {
     env: 'development' | 'production';
     port: number;
     jwtSecret: string;
+    userDir: string;
 }
 
 const { NODE_ENV } = process.env;

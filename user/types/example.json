@@ -1,0 +1,7 @@
+{
+    "key": "title",
+    "type": "text",
+    "label": "Title",
+    "value": "",
+    "isRequired": true
+}

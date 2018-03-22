@@ -1,5 +1,6 @@
 {
     "env": "development",
     "port": 9000,
-    "jwtSecret": "0cb99e3e-6db9-4429-a6b8-89c39b098bfd"
+    "jwtSecret": "0cb99e3e-6db9-4429-a6b8-89c39b098bfd",
+    "userDir": "../user"
 }
