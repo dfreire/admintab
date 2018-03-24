@@ -30,6 +30,11 @@ app.get('/api/content/*', async (req: express.Request, res: express.Response) =>
 	}
 });
 
+app.get('/api/types',async  (req: express.Request, res: express.Response) => {
+	const items = await sh.ls('-l', path.join(userDir, 'types'));
+	res.send(items.map(item => item['name'].split('.json')[0]));
+});
+
 app.get('/api/types/:type', (req: express.Request, res: express.Response) => {
 	const { type } = req.params;
 	res.sendFile(path.join(userDir, 'types', `${type}.json`));
