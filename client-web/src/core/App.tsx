@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { BrowserRouter, Route, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { Breadcrumb } from 'antd';
 import { State } from './Store';
 import FolderView from './FolderView';
 import FileView from './FileView';
@@ -37,17 +38,39 @@ class AppView extends React.Component<Props, {}> {
 	}
 
 	render() {
-		const tokens = this.props.location.pathname.split('/').filter(t => t.length > 0);
-		if (tokens.length > 0) {
-			tokens.pop();
-		}
-		const urlUp = '/' + tokens.join('/');
-
 		return (
 			<div>
-				<Link to={urlUp}>up</Link>
-				<h3> {this.props.location.pathname} </h3>
+				{this._renderBreadcrumb()}
 				{this._renderContent()}
+			</div>
+		);
+	}
+
+	_renderBreadcrumb = () => {
+		const tokens = this.props.location.pathname.split('/').filter(t => t.length > 0);
+
+		const items = [{ token: 'Home', url: '/' }];
+		tokens.forEach((token, i) => {
+			const url = ['', ...tokens.slice(0, i), token].join('/');
+			console.log('token', token, 'url', url);
+			items.push({ token, url });
+		});
+
+		console.log('items', items);
+
+		const style = {
+			backgroundColor: '#F8FAFA',
+			padding: 8,
+			border: '1px solid #EAEDED',
+		};
+
+		return (
+			<div style={{ marginTop: 20 }}>
+				<Breadcrumb style={style}>
+					{items.map((item, i) => {
+						return <Breadcrumb.Item key={`${i}-${item.token}`}><Link to={item.url}>{item.token}</Link></Breadcrumb.Item>;
+					})}
+				</Breadcrumb>
 			</div>
 		);
 	}

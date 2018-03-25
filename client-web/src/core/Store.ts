@@ -66,7 +66,6 @@ const model = {
 
 	effects: {
 		async loadContent(payload: { pathname: string }, rootState: State) {
-			console.log('loadContent', payload);
 			const { pathname } = payload;
 			const response = await axios.get(`/api/content${pathname}`); // TODO try catch
 			const content = response.data;
@@ -74,7 +73,6 @@ const model = {
 		},
 
 		async createNewFolder(payload: { pathname: string, name: string }, rootState: State) {
-			console.log('createNewFolder', payload);
 			const { pathname, name } = payload;
 			const response = await axios.post(`/api/content${pathname}`, { name }); // TODO try catch
 			console.log('response', response);
@@ -82,7 +80,6 @@ const model = {
 		},
 
 		async createNewFile(payload: { pathname: string, name: string, type: string }, rootState: State) {
-			console.log('createNewFile', payload);
 			const { pathname, name, type } = payload;
 			const response = await axios.post(`/api/content${pathname}`, { name, type }); // TODO try catch
 			console.log('response', response);
