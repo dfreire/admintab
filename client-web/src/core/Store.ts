@@ -1,4 +1,5 @@
 import { init } from '@rematch/core';
+import axios from 'axios';
 import { Folder, File } from './Types';
 
 export interface State {
@@ -21,13 +22,14 @@ const INITIAL_STATE: State = {
 
 const model = {
 	state: { ...INITIAL_STATE },
+
 	reducers: {
 		onClickedNewFolder: (state: State) => {
 			const folderView = { ...state.folderView, visibleNewFolder: true };
 			return { ...state, folderView };
 		},
 
-		onCancelNewFolder: (state: State) => {
+		cancelNewFolder: (state: State) => {
 			const folderView = { ...state.folderView, visibleNewFolder: false };
 			return { ...state, folderView };
 		},
@@ -37,11 +39,11 @@ const model = {
 			return { ...state, folderView };
 		},
 
-		onCancelNewFile: (state: State) => {
+		cancelNewFile: (state: State) => {
 			const folderView = { ...state.folderView, visibleNewFile: false };
 			return { ...state, folderView };
 		},
-		
+
 		onLoadedContent: (state: State, payload: { pathname: string; content: { type: string } }) => {
 			const { pathname, content } = payload;
 			let folderView, fileView;
@@ -61,14 +63,31 @@ const model = {
 			return { ...state, folderView, fileView };
 		},
 	},
+
 	effects: {
-		async fetchContent(payload: { pathname: string }, rootState: State) {
-			console.log('fetchContent', payload);
+		async loadContent(payload: { pathname: string }, rootState: State) {
+			console.log('loadContent', payload);
 			const { pathname } = payload;
-			const content = await fetch(`/api/content${pathname}`)
-				.then(response => response.json());
+			const response = await axios.get(`/api/content${pathname}`); // TODO try catch
+			const content = response.data;
 			(this as any).onLoadedContent({ pathname, content });
-		}
+		},
+
+		async createNewFolder(payload: { pathname: string, name: string }, rootState: State) {
+			console.log('createNewFolder', payload);
+			const { pathname, name } = payload;
+			const response = await axios.post(`/api/content${pathname}`, { name }); // TODO try catch
+			console.log('response', response);
+			(this as any).loadContent({ pathname });
+		},
+
+		async createNewFile(payload: { pathname: string, name: string, type: string }, rootState: State) {
+			console.log('createNewFile', payload);
+			const { pathname, name, type } = payload;
+			const response = await axios.post(`/api/content${pathname}`, { name, type }); // TODO try catch
+			console.log('response', response);
+			(this as any).loadContent({ pathname });
+		},
 	},
 };
 

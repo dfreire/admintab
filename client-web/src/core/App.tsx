@@ -12,13 +12,10 @@ interface Props extends State {
 	};
 	folderView: any;
 	fileView: any;
-	fetchContent(payload: { pathname: string });
+	loadContent(payload: { pathname: string });
 }
 
-class AppView extends React.Component<Props, State> {
-	state = {
-	} as State;
-
+class AppView extends React.Component<Props, {}> {
 	componentWillMount() {
 		console.log('AppView componentWillMount props', this.props);
 		this._load(this.props.location.pathname);
@@ -35,7 +32,7 @@ class AppView extends React.Component<Props, State> {
 		const folderView = this.props.folderView || {};
 		const fileView = this.props.fileView || {};
 		if (pathname !== folderView.pathname && pathname !== fileView.pathname) {
-			this.props.fetchContent({ pathname: pathname });
+			this.props.loadContent({ pathname: pathname });
 		}
 	}
 
@@ -57,9 +54,7 @@ class AppView extends React.Component<Props, State> {
 
 	_renderContent = () => {
 		if (this.props.folderView != null) {
-			return (
-				<FolderView />
-			);
+			return <FolderView />;
 		} else if (this.props.fileView != null) {
 			return <FileView />;
 		} else {
@@ -75,11 +70,16 @@ const App = (props1) => (
 );
 
 const mapState = (models) => {
-	return { folderView: models.model.folderView, fileView: models.model.fileView };
+	return {
+		folderView: models.model.folderView,
+		fileView: models.model.fileView,
+	};
 };
 
 const mapDispatch = (models) => {
-	return { fetchContent: models.model.fetchContent };
+	return {
+		loadContent: models.model.loadContent,
+	};
 };
 
 export default connect(mapState, mapDispatch)(App);

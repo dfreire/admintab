@@ -35,8 +35,8 @@ class FolderView extends React.Component<Props, {}> {
 					<Button type="primary" onClick={this.props.onClickedNewFile}>New File</Button>
 				</div>
 
-				<NewFolder visible={this.props.visibleNewFolder} />
-				<NewFile visible={this.props.visibleNewFile} />
+				<NewFolder />
+				<NewFile />
 			</div>
 		);
 	}
@@ -53,4 +53,4 @@ const mapDispatch = (models) => {
 	};
 };
 
-export default connect(mapState, mapDispatch)(FolderView);
+export default connect(mapState, mapDispatch)(FolderView) as any;

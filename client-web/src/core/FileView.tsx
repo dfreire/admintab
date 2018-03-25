@@ -48,4 +48,4 @@ const mapDispatch = (models) => {
 	return {};
 };
 
-export default connect(mapState, mapDispatch)(FileView);
+export default connect(mapState, mapDispatch)(FileView) as any;

@@ -5,12 +5,14 @@
 	"dependencies": {
 		"@rematch/core": "^0.5.4",
 		"antd": "^3.3.2",
+		"axios": "^0.18.0",
 		"page": "^1.8.5",
 		"react": "^16.2.0",
 		"react-dom": "^16.2.0",
 		"react-redux": "^5.0.7",
 		"react-router-dom": "^4.2.2",
-		"react-scripts-ts": "2.13.0"
+		"react-scripts-ts": "2.13.0",
+		"slugg": "^1.2.1"
 	},
 	"scripts": {
 		"start": "react-scripts-ts start",
@@ -20,11 +22,13 @@
 	},
 	"devDependencies": {
 		"@types/antd": "^1.0.0",
+		"@types/axios": "^0.14.0",
 		"@types/jest": "^22.2.0",
 		"@types/node": "^9.4.7",
 		"@types/page": "^1.5.32",
 		"@types/react": "^16.0.40",
 		"@types/react-dom": "^16.0.4",
+		"@types/react-redux": "^5.0.15",
 		"@types/react-router-dom": "^4.2.5",
 		"typescript": "^2.7.2"
 	},

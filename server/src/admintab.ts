@@ -3,6 +3,7 @@ import * as express from 'express';
 import * as passport from 'passport';
 import * as bodyParser from 'body-parser';
 import * as sh from 'shelljs';
+import * as slug from 'slugg';
 import { createJwtMiddleware, createJwtToken } from './jwt';
 import { config } from './config';
 
@@ -20,7 +21,7 @@ const jwtMiddleware = createJwtMiddleware();
 app.get('/api/content/*', async (req: express.Request, res: express.Response) => {
 	const pathname = req.params[0];
 	const items = await sh.ls('-l', path.join(userDir, 'content', pathname));
-	if (items.length === 1 && items[0]['name'].endsWith('.json')) {
+	if (items.length === 1 && pathname.endsWith('.json')) {
 		res.sendFile(items[0]['name']);
 	} else {
 		res.send({
@@ -30,7 +31,22 @@ app.get('/api/content/*', async (req: express.Request, res: express.Response) =>
 	}
 });
 
-app.get('/api/types',async  (req: express.Request, res: express.Response) => {
+app.post('/api/content/*', async (req: express.Request, res: express.Response) => {
+	const pathname = req.params[0];
+	const { name, type } = req.body;
+	const _name = slug(name);
+	if (type != null) {
+		// file
+		await sh.touch(path.join(userDir, 'content', pathname, `${_name}.json`));
+		res.send({ name: `${_name}.json` });
+	} else {
+		// folder
+		await sh.mkdir(path.join(userDir, 'content', pathname, _name));
+		res.send({ name: _name });
+	}
+});
+
+app.get('/api/types', async (req: express.Request, res: express.Response) => {
 	const items = await sh.ls('-l', path.join(userDir, 'types'));
 	res.send(items.map(item => item['name'].split('.json')[0]));
 });
