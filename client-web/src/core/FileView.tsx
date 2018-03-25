@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { File, Field, TextField } from './Types';
 
 interface Props {
@@ -6,8 +7,10 @@ interface Props {
 	file: File;
 }
 
-export class FileView extends React.Component<Props, {}> {
+class FileView extends React.Component<Props, {}> {
 	render() {
+		console.log('FileView props', this.props);
+
 		return (
 			<div>
 				{this.props.file.type}
@@ -36,3 +39,13 @@ export class FileView extends React.Component<Props, {}> {
 		);
 	}
 }
+
+const mapState = (models) => {
+	return models.model.fileView;
+};
+
+const mapDispatch = (models) => {
+	return {};
+};
+
+export default connect(mapState, mapDispatch)(FileView);
