@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { BrowserRouter, Route, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Breadcrumb } from 'antd';
+import { Breadcrumb, Layout } from 'antd';
 import { State } from './Store';
 import FolderView from './FolderView';
 import FileView from './FileView';
@@ -39,50 +39,39 @@ class AppView extends React.Component<Props, {}> {
 
 	render() {
 		return (
-			<div>
+			<Layout style={{ background: '#efefef' }}>
 				{this._renderBreadcrumb()}
 				{this._renderContent()}
-			</div>
+			</Layout>
 		);
 	}
 
 	_renderBreadcrumb = () => {
 		const tokens = this.props.location.pathname.split('/').filter(t => t.length > 0);
 
-		const items = [{ token: 'Home', url: '/' }];
+		const items = [{ token: 'AdminTab', url: '/' }];
 		tokens.forEach((token, i) => {
 			const url = ['', ...tokens.slice(0, i), token].join('/');
 			console.log('token', token, 'url', url);
 			items.push({ token, url });
 		});
 
-		console.log('items', items);
-
-		const style = {
-			backgroundColor: '#F8FAFA',
-			padding: 8,
-			border: '1px solid #EAEDED',
-		};
-
 		return (
-			<div style={{ marginTop: 20 }}>
-				<Breadcrumb style={style}>
-					{items.map((item, i) => {
-						return <Breadcrumb.Item key={`${i}-${item.token}`}><Link to={item.url}>{item.token}</Link></Breadcrumb.Item>;
-					})}
-				</Breadcrumb>
-			</div>
+			<Breadcrumb style={{ marginTop: 20, marginBottom: 20 }}>
+				{items.map((item, i) => (
+					<Breadcrumb.Item key={`${i}-${item.token}`}><Link to={item.url}>{item.token}</Link></Breadcrumb.Item>
+				))}
+			</Breadcrumb>
 		);
 	}
 
 	_renderContent = () => {
-		if (this.props.folderView != null) {
-			return <FolderView />;
-		} else if (this.props.fileView != null) {
-			return <FileView />;
-		} else {
-			return false;
-		}
+		return (
+			<Layout.Content style={{ background: '#fff', padding: 20 }}>
+				{this.props.folderView != null && <FolderView />}
+				{this.props.fileView != null && <FileView />}
+			</Layout.Content>
+		);
 	}
 }
 

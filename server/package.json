@@ -36,7 +36,7 @@
     "compile-watch": "tsc -w",
     "test": "jest --coverage",
     "test-watch": "jest --watch",
-    "serve-development": "NODE_ENV=development node out/admintab.js",
+    "serve-development": "npm run compile && NODE_ENV=development node out/admintab.js",
     "serve-production": "NODE_ENV=production node out/admintab.js",
     "pkg": "npm run clean && npm run compile && pkg . -t node8-linux-x64,node8-macos-x64"
   }
