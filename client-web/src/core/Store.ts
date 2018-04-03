@@ -78,7 +78,8 @@ const model = {
 		async createNewFolder(payload: { pathname: string, name: string }, rootState: State) {
 			try {
 				const { pathname, name } = payload;
-				await axios.post(`/api/content${pathname}`, { name });
+				const _pathname = [...pathname.split('/'), name].join('/');
+				await axios.post(`/api/content${_pathname}`, { name });
 				(this as any).loadContent({ pathname });
 			} catch (err) {
 				console.error(err);
@@ -88,12 +89,24 @@ const model = {
 		async createNewFile(payload: { pathname: string, name: string, type: string }, rootState: State) {
 			try {
 				const { pathname, name, type } = payload;
-				await axios.post(`/api/content${pathname}`, { name, type });
+				const _pathname = [...pathname.split('/'), `${name}.json`].join('/');
+				const file = { type, content: {} };
+				await axios.post(`/api/content${_pathname}`, { file });
 				(this as any).loadContent({ pathname });
 			} catch (err) {
 				console.error(err);
 			}
 		},
+
+		async saveFile(payload: { pathname: string, file: File }, rootState: State) {
+			const { pathname, file } = payload;
+
+			console.log('saveFile pathname', pathname);
+			console.log('saveFile file', file);
+
+			await axios.post(`/api/content${pathname}`, { file });
+			(this as any).loadContent({ pathname });
+		}
 	},
 };
 

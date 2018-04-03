@@ -1,3 +1,4 @@
+import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as express from 'express';
 import * as passport from 'passport';
@@ -33,17 +34,15 @@ app.get('/api/content/*', async (req: express.Request, res: express.Response) =>
 
 app.post('/api/content/*', async (req: express.Request, res: express.Response) => {
 	const pathname = req.params[0];
-	const { name, type } = req.body;
-	const _name = slug(name);
-	if (type != null) {
+	if (pathname.endsWith('.json')) {
 		// file
-		await sh.touch(path.join(userDir, 'content', pathname, `${_name}.json`));
-		res.send({ name: `${_name}.json` });
+		const { file } = req.body;
+		await fs.outputJson(path.join(userDir, 'content', pathname), file);
 	} else {
 		// folder
-		await sh.mkdir(path.join(userDir, 'content', pathname, _name));
-		res.send({ name: _name });
+		await sh.mkdir('-p', path.join(userDir, 'content', pathname));
 	}
+	res.send({ pathname });
 });
 
 app.get('/api/types', async (req: express.Request, res: express.Response) => {

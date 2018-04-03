@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Row, Col, Tabs, Form, Input } from 'antd';
+import { Row, Col, Tabs, Form, Input, Button } from 'antd';
 import { dispatch } from '@rematch/core';
 const model = (dispatch as any).model;
 import { GlobalProps, FileViewProps, Field, TextField } from './Types';
@@ -9,13 +9,13 @@ class FileView extends React.Component<GlobalProps, {}> {
 		const fileView = this.props.fileView as FileViewProps;
 		console.log('fileView', fileView);
 		const tokens = fileView.pathname.split('/').filter(t => t.length > 0);
-		const title = tokens.length > 0 ? tokens[tokens.length - 1] : 'AdminTab';
+		const name = tokens[tokens.length - 1].split('.json')[0];
 
 		return (
 			<div>
 				<Row type="flex" align="middle">
 					<Col span={12}>
-						<h1>{title}</h1>
+						<h1>{name}</h1>
 					</Col>
 					<Col span={12} />
 				</Row>
@@ -28,8 +28,16 @@ class FileView extends React.Component<GlobalProps, {}> {
 						</Tabs.TabPane>
 					))}
 				</Tabs>
+				<div>
+					<Button type="primary" onClick={this._onClickedSave}>Save</Button>
+				</div>
 			</div>
 		);
+	}
+
+	_onClickedSave = () => {
+		const fileView = this.props.fileView as FileViewProps;
+		model.saveFile({ pathname: fileView.pathname, file: fileView.file });
 	}
 
 	_renderField = (field: Field) => {
