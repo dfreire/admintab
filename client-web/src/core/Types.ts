@@ -1,3 +1,24 @@
+export interface GlobalState {
+	location: {
+		pathname: string;
+	};
+	folderView?: FolderViewProps;
+	fileView?: FileViewProps;
+}
+
+export interface FolderViewProps {
+	pathname: string;
+	folder: Folder;
+	visibleNewFolder: boolean;
+	visibleNewFile: boolean;
+}
+
+export interface FileViewProps {
+	pathname: string;
+	file: File;
+	fields: Field[];
+}
+
 export interface Folder {
 	type: 'Folder';
 	content: string[];

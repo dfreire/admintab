@@ -1,33 +1,24 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Row, Col, Table, Icon, Button, Dropdown, Menu } from 'antd';
-import { Folder } from './Types';
+import { GlobalState, FolderViewProps } from './Types';
 import NewFolder from './NewFolder';
 import NewFile from './NewFile';
-
-interface Props {
-	pathname: string;
-	folder: Folder;
-	visibleNewFolder: boolean;
-	visibleNewFile: boolean;
-	onClickedNewFolder: { () };
-	onClickedNewFile: { () };
-}
 
 interface State {
 	selectedRowKeys: string[] | number[];
 }
 
-class FolderView extends React.Component<Props, State> {
+class FolderView extends React.Component<GlobalState, State> {
 	state = {
 		selectedRowKeys: [],
 	} as State;
 
 	render() {
+		const folderView = this.props.folderView as FolderViewProps;
 		console.log('FolderView props', this.props);
 
-		const tokens = this.props.pathname.split('/').filter(t => t.length > 0);
+		const tokens = folderView.pathname.split('/').filter(t => t.length > 0);
 		const title = tokens.length > 0 ? tokens[tokens.length - 1] : 'AdminTab';
 
 		return (
@@ -82,6 +73,8 @@ class FolderView extends React.Component<Props, State> {
 	}
 
 	_renderTable = (tokens: string[]) => {
+		const folderView = this.props.folderView as FolderViewProps;
+
 		return (
 			<Table
 				size="middle"
@@ -101,7 +94,7 @@ class FolderView extends React.Component<Props, State> {
 						);
 					}
 				}]}
-				dataSource={this.props.folder.content.map(name => ({ key: name, name }))}
+				dataSource={folderView.folder.content.map(name => ({ key: name, name }))}
 				pagination={{
 					size: 'small',
 				}}
@@ -110,15 +103,4 @@ class FolderView extends React.Component<Props, State> {
 	}
 }
 
-const mapState = (models) => {
-	return models.model.folderView;
-};
-
-const mapDispatch = (models) => {
-	return {
-		onClickedNewFolder: models.model.onClickedNewFolder,
-		onClickedNewFile: models.model.onClickedNewFile,
-	};
-};
-
-export default connect(mapState, mapDispatch)(FolderView) as any;
+export default FolderView;

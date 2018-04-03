@@ -1,19 +1,28 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { File, Field, TextField } from './Types';
+import { dispatch } from '@rematch/core';
+const model = (dispatch as any).model;
+import { Row, Col, Form, Input } from 'antd';
+import { GlobalState, FileViewProps, Field, TextField } from './Types';
 
-interface Props {
-	pathname: string;
-	file: File;
-}
-
-class FileView extends React.Component<Props, {}> {
+class FileView extends React.Component<GlobalState, {}> {
 	render() {
+		const fileView = this.props.fileView as FileViewProps;
 		console.log('FileView props', this.props);
+
+		const tokens = fileView.pathname.split('/').filter(t => t.length > 0);
+		const title = tokens.length > 0 ? tokens[tokens.length - 1] : 'AdminTab';
 
 		return (
 			<div>
-				{this.props.file.type}
+				<Row type="flex" align="middle">
+					<Col span={12}>
+						<h1>{title}</h1>
+					</Col>
+					<Col span={12} />
+				</Row>
+				<Form>
+					{fileView.fields.map(this._renderField)}
+				</Form>
 			</div>
 		);
 	}
@@ -23,29 +32,26 @@ class FileView extends React.Component<Props, {}> {
 			case 'text':
 				return this._renderTextField(field as TextField);
 			default:
-				return <p>Unknown field type: {field.type}</p>;
+				return false;
 		}
 	}
 
 	_renderTextField = (field: TextField) => {
+		const fileView = this.props.fileView as FileViewProps;
+		const { key, label } = field;
+		const { content } = fileView.file;
+		console.log('value', content[key]);
+
 		return (
-			<div>
-				<label>{field.label}</label>
-				<input
+			<Form.Item key={key} label={label}>
+				<Input
 					type="text"
-					value={this.props.file.content[field.key]}
+					value={content[key]}
+					onChange={(evt) => model.onChangeFieldValue({ key, value: evt.target.value })}
 				/>
-			</div>
+			</Form.Item>
 		);
 	}
 }
 
-const mapState = (models) => {
-	return models.model.fileView;
-};
-
-const mapDispatch = (models) => {
-	return {};
-};
-
-export default connect(mapState, mapDispatch)(FileView) as any;
+export default FileView;

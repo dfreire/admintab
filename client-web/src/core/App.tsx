@@ -1,19 +1,15 @@
 import * as React from 'react';
+import { dispatch } from '@rematch/core';
+const model = (dispatch as any).model;
 import { BrowserRouter, Route, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Breadcrumb, Layout } from 'antd';
-import { State } from './Store';
+import { GlobalState } from './Types';
 import FolderView from './FolderView';
 import FileView from './FileView';
 import 'antd/dist/antd.css';
 
-interface Props extends State {
-	location: {
-		pathname: string;
-	};
-	folderView: any;
-	fileView: any;
-	loadContent(payload: { pathname: string });
+interface Props extends GlobalState {
 }
 
 class AppView extends React.Component<Props, {}> {
@@ -30,10 +26,10 @@ class AppView extends React.Component<Props, {}> {
 	}
 
 	_load = (pathname: string) => {
-		const folderView = this.props.folderView || {};
-		const fileView = this.props.fileView || {};
+		const folderView = this.props.folderView || { pathname: '' };
+		const fileView = this.props.fileView || { pathname: '' };
 		if (pathname !== folderView.pathname && pathname !== fileView.pathname) {
-			this.props.loadContent({ pathname: pathname });
+			model.loadContent({ pathname });
 		}
 	}
 
@@ -52,7 +48,6 @@ class AppView extends React.Component<Props, {}> {
 		const items = [{ token: 'AdminTab', url: '/' }];
 		tokens.forEach((token, i) => {
 			const url = ['', ...tokens.slice(0, i), token].join('/');
-			console.log('token', token, 'url', url);
 			items.push({ token, url });
 		});
 
@@ -66,10 +61,11 @@ class AppView extends React.Component<Props, {}> {
 	}
 
 	_renderContent = () => {
+		console.log('AppView _renderContent');
 		return (
 			<Layout.Content style={{ background: '#fff', padding: 20 }}>
-				{this.props.folderView != null && <FolderView />}
-				{this.props.fileView != null && <FileView />}
+				{this.props.folderView != null && <FolderView {...this.props} />}
+				{this.props.fileView != null && <FileView {...this.props} />}
 			</Layout.Content>
 		);
 	}
@@ -77,7 +73,7 @@ class AppView extends React.Component<Props, {}> {
 
 const App = (props1) => (
 	<BrowserRouter>
-		<Route component={(props2) => <AppView {...props1} {...props2} />} />
+		<Route render={(props2) => <AppView {...props1} {...props2} />} />
 	</BrowserRouter>
 );
 
