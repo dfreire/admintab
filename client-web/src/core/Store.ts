@@ -76,8 +76,7 @@ const model = {
 		async createNewFolder(payload: { pathname: string, name: string }, rootState: GlobalState) {
 			try {
 				const { pathname, name } = payload;
-				const response = await axios.post(`/api/content${pathname}`, { name }); // TODO try catch
-				console.log('response', response);
+				await axios.post(`/api/content${pathname}`, { name });
 				(this as any).loadContent({ pathname });
 			} catch (err) {
 				console.error(err);
@@ -87,8 +86,7 @@ const model = {
 		async createNewFile(payload: { pathname: string, name: string, type: string }, rootState: GlobalState) {
 			try {
 				const { pathname, name, type } = payload;
-				const response = await axios.post(`/api/content${pathname}`, { name, type }); // TODO try catch
-				console.log('response', response);
+				await axios.post(`/api/content${pathname}`, { name, type });
 				(this as any).loadContent({ pathname });
 			} catch (err) {
 				console.error(err);

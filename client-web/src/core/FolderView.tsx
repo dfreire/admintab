@@ -15,8 +15,8 @@ class FolderView extends React.Component<GlobalState, State> {
 	} as State;
 
 	render() {
+		console.log('FolderView render', this.props);
 		const folderView = this.props.folderView as FolderViewProps;
-		console.log('FolderView props', this.props);
 
 		const tokens = folderView.pathname.split('/').filter(t => t.length > 0);
 		const title = tokens.length > 0 ? tokens[tokens.length - 1] : 'AdminTab';

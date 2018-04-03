@@ -34,6 +34,8 @@ class AppView extends React.Component<Props, {}> {
 	}
 
 	render() {
+		console.log('AppView render', this.props);
+
 		return (
 			<Layout style={{ background: '#efefef' }}>
 				{this._renderBreadcrumb()}
@@ -61,7 +63,6 @@ class AppView extends React.Component<Props, {}> {
 	}
 
 	_renderContent = () => {
-		console.log('AppView _renderContent');
 		return (
 			<Layout.Content style={{ background: '#fff', padding: 20 }}>
 				{this.props.folderView != null && <FolderView {...this.props} />}

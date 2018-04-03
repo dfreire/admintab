@@ -6,8 +6,8 @@ import { GlobalState, FileViewProps, Field, TextField } from './Types';
 
 class FileView extends React.Component<GlobalState, {}> {
 	render() {
+		console.log('FileView render', this.props);
 		const fileView = this.props.fileView as FileViewProps;
-		console.log('FileView props', this.props);
 
 		const tokens = fileView.pathname.split('/').filter(t => t.length > 0);
 		const title = tokens.length > 0 ? tokens[tokens.length - 1] : 'AdminTab';
