@@ -1,8 +1,10 @@
 import { init } from '@rematch/core';
 import axios from 'axios';
-import { Folder, File, Field, GlobalState, FileViewProps } from './Types';
+import { Folder, File, Field, GlobalProps, FileViewProps } from './Types';
 
-const INITIAL_STATE: GlobalState = {
+type State = GlobalProps;
+
+const INITIAL_STATE: State = {
 	location: {
 		pathname: '',
 	},
@@ -14,39 +16,39 @@ const model = {
 	state: { ...INITIAL_STATE },
 
 	reducers: {
-		onClickedNewFolder: (state: GlobalState) => {
+		onClickedNewFolder: (state: State) => {
 			const folderView = { ...state.folderView, visibleNewFolder: true };
 			return { ...state, folderView };
 		},
 
-		cancelNewFolder: (state: GlobalState) => {
+		cancelNewFolder: (state: State) => {
 			const folderView = { ...state.folderView, visibleNewFolder: false };
 			return { ...state, folderView };
 		},
 
-		onClickedNewFile: (state: GlobalState) => {
+		onClickedNewFile: (state: State) => {
 			const folderView = { ...state.folderView, visibleNewFile: true };
 			return { ...state, folderView };
 		},
 
-		cancelNewFile: (state: GlobalState) => {
+		cancelNewFile: (state: State) => {
 			const folderView = { ...state.folderView, visibleNewFile: false };
 			return { ...state, folderView };
 		},
 
-		onLoadedFolder: (state: GlobalState, payload: { pathname: string; folder: Folder }) => {
+		onLoadedFolder: (state: State, payload: { pathname: string; folder: Folder }) => {
 			const { pathname, folder } = payload;
 			const folderView = { pathname, folder, visibleNewFolder: false, visibleNewFile: false };
 			return { ...state, folderView, fileView: undefined };
 		},
 
-		onLoadedFile: (state: GlobalState, payload: { pathname: string; file: File; fields: Field[] }) => {
+		onLoadedFile: (state: State, payload: { pathname: string; file: File; fields: Field[] }) => {
 			const { pathname, file, fields } = payload;
 			const fileView = { pathname, file, fields };
 			return { ...state, fileView, folderView: undefined };
 		},
 
-		onChangeFieldValue: (state: GlobalState, payload: { key: string, value: any }) => {
+		onChangeFieldValue: (state: State, payload: { key: string, value: any }) => {
 			const { key, value } = payload;
 			const fileView = { ...state.fileView } as FileViewProps;
 			fileView.file.content[key] = value;
@@ -55,7 +57,7 @@ const model = {
 	},
 
 	effects: {
-		async loadContent(payload: { pathname: string }, rootState: GlobalState) {
+		async loadContent(payload: { pathname: string }, rootState: State) {
 			try {
 				const { pathname } = payload;
 				const res1 = await axios.get(`/api/content${pathname}`);
@@ -73,7 +75,7 @@ const model = {
 			}
 		},
 
-		async createNewFolder(payload: { pathname: string, name: string }, rootState: GlobalState) {
+		async createNewFolder(payload: { pathname: string, name: string }, rootState: State) {
 			try {
 				const { pathname, name } = payload;
 				await axios.post(`/api/content${pathname}`, { name });
@@ -83,7 +85,7 @@ const model = {
 			}
 		},
 
-		async createNewFile(payload: { pathname: string, name: string, type: string }, rootState: GlobalState) {
+		async createNewFile(payload: { pathname: string, name: string, type: string }, rootState: State) {
 			try {
 				const { pathname, name, type } = payload;
 				await axios.post(`/api/content${pathname}`, { name, type });

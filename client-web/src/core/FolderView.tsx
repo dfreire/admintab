@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Row, Col, Table, Icon, Button, Dropdown, Menu } from 'antd';
-import { GlobalState, FolderViewProps } from './Types';
+import { dispatch } from '@rematch/core';
+const model = (dispatch as any).model;
+import { GlobalProps, FolderViewProps } from './Types';
 import NewFolder from './NewFolder';
 import NewFile from './NewFile';
 
@@ -9,15 +11,13 @@ interface State {
 	selectedRowKeys: string[] | number[];
 }
 
-class FolderView extends React.Component<GlobalState, State> {
+class FolderView extends React.Component<GlobalProps, State> {
 	state = {
 		selectedRowKeys: [],
 	} as State;
 
 	render() {
-		console.log('FolderView render', this.props);
 		const folderView = this.props.folderView as FolderViewProps;
-
 		const tokens = folderView.pathname.split('/').filter(t => t.length > 0);
 		const title = tokens.length > 0 ? tokens[tokens.length - 1] : 'AdminTab';
 
@@ -34,8 +34,8 @@ class FolderView extends React.Component<GlobalState, State> {
 				<div style={{ marginTop: 20 }}>
 					{this._renderTable(tokens)}
 				</div>
-				<NewFolder />
-				<NewFile />
+				<NewFolder {...this.props} />
+				<NewFile {...this.props} />
 			</div>
 		);
 	}
@@ -44,7 +44,7 @@ class FolderView extends React.Component<GlobalState, State> {
 		const menu = (
 			<Menu
 				onClick={({ item, key, keyPath }) => {
-					this.props[key]();
+					model[key]();
 				}}
 			>
 				<Menu.Item key="onClickedNewFile">New File</Menu.Item>

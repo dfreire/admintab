@@ -1,33 +1,28 @@
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { Modal, Form, Input } from 'antd';
 import * as slug from 'slugg';
-
-interface Props {
-	pathname: string;
-	visibleNewFile: boolean;
-	createNewFile: { (payload: { pathname: string; name: string; type: string }) };
-	cancelNewFile: { () };
-}
+import * as React from 'react';
+import { Modal, Form, Input } from 'antd';
+import { dispatch } from '@rematch/core';
+const model = (dispatch as any).model;
+import { GlobalProps, FolderViewProps } from './Types';
 
 interface State {
 	name: string;
 }
 
-class NewFile extends React.Component<Props, State> {
+class NewFile extends React.Component<GlobalProps, State> {
 	state = {
 		name: '',
 	} as State;
 
 	render() {
-		console.log('NewFile props', this.props);
+		const folderView = this.props.folderView as FolderViewProps;
 
 		return (
 			<Modal
 				title="New File"
-				visible={this.props.visibleNewFile}
+				visible={folderView.visibleNewFile}
 				onOk={this._onOk}
-				onCancel={this.props.cancelNewFile}
+				onCancel={model.cancelNewFile}
 			>
 				<Form>
 					<Form.Item
@@ -47,26 +42,13 @@ class NewFile extends React.Component<Props, State> {
 	}
 
 	_onOk = () => {
-		this.props.createNewFile({
-			pathname: this.props.pathname,
+		const folderView = this.props.folderView as FolderViewProps;
+		model.createNewFile({
+			pathname: folderView.pathname,
 			name: slug(this.state.name),
 			type: 'example',
 		});
 	}
 }
 
-const mapState = (models) => {
-	return {
-		pathname: models.model.folderView.pathname,
-		visibleNewFile: models.model.folderView.visibleNewFile,
-	};
-};
-
-const mapDispatch = (models) => {
-	return {
-		createNewFile: models.model.createNewFile,
-		cancelNewFile: models.model.cancelNewFile,
-	};
-};
-
-export default connect(mapState, mapDispatch)(NewFile);
+export default NewFile;

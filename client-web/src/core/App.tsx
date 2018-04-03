@@ -1,25 +1,20 @@
 import * as React from 'react';
-import { dispatch } from '@rematch/core';
-const model = (dispatch as any).model;
 import { BrowserRouter, Route, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Breadcrumb, Layout } from 'antd';
-import { GlobalState } from './Types';
+import 'antd/dist/antd.css';
+import { GlobalProps } from './Types';
 import FolderView from './FolderView';
 import FileView from './FileView';
-import 'antd/dist/antd.css';
+import { dispatch } from '@rematch/core';
+const model = (dispatch as any).model;
 
-interface Props extends GlobalState {
-}
-
-class AppView extends React.Component<Props, {}> {
+class AppView extends React.Component<GlobalProps, {}> {
 	componentWillMount() {
-		console.log('AppView componentWillMount props', this.props);
 		this._load(this.props.location.pathname);
 	}
 
-	componentWillUpdate(nextProps: Props) {
-		console.log('AppView componentWillUpdate nextProps', nextProps);
+	componentWillUpdate(nextProps: GlobalProps) {
 		if (this.props.location.pathname !== nextProps.location.pathname) {
 			this._load(nextProps.location.pathname);
 		}
@@ -34,8 +29,6 @@ class AppView extends React.Component<Props, {}> {
 	}
 
 	render() {
-		console.log('AppView render', this.props);
-
 		return (
 			<Layout style={{ background: '#efefef' }}>
 				{this._renderBreadcrumb()}

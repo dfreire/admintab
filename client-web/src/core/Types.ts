@@ -1,4 +1,4 @@
-export interface GlobalState {
+export interface GlobalProps {
 	location: {
 		pathname: string;
 	};

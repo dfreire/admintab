@@ -1,14 +1,12 @@
 import * as React from 'react';
+import { Row, Col, Form, Input } from 'antd';
 import { dispatch } from '@rematch/core';
 const model = (dispatch as any).model;
-import { Row, Col, Form, Input } from 'antd';
-import { GlobalState, FileViewProps, Field, TextField } from './Types';
+import { GlobalProps, FileViewProps, Field, TextField } from './Types';
 
-class FileView extends React.Component<GlobalState, {}> {
+class FileView extends React.Component<GlobalProps, {}> {
 	render() {
-		console.log('FileView render', this.props);
 		const fileView = this.props.fileView as FileViewProps;
-
 		const tokens = fileView.pathname.split('/').filter(t => t.length > 0);
 		const title = tokens.length > 0 ? tokens[tokens.length - 1] : 'AdminTab';
 
@@ -40,7 +38,6 @@ class FileView extends React.Component<GlobalState, {}> {
 		const fileView = this.props.fileView as FileViewProps;
 		const { key, label } = field;
 		const { content } = fileView.file;
-		console.log('value', content[key]);
 
 		return (
 			<Form.Item key={key} label={label}>
