@@ -1,6 +1,7 @@
 {
 	"type": "example",
 	"content": {
-		"title": "This is the title"
+		"title_en": "This is the title",
+		"title_pt": "Este é o título"
 	}
 }

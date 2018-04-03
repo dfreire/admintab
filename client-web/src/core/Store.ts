@@ -1,6 +1,6 @@
 import { init } from '@rematch/core';
 import axios from 'axios';
-import { Folder, File, Field, GlobalProps, FileViewProps } from './Types';
+import { Folder, File, Tab, GlobalProps, FileViewProps } from './Types';
 
 type State = GlobalProps;
 
@@ -42,9 +42,9 @@ const model = {
 			return { ...state, folderView, fileView: undefined };
 		},
 
-		onLoadedFile: (state: State, payload: { pathname: string; file: File; fields: Field[] }) => {
-			const { pathname, file, fields } = payload;
-			const fileView = { pathname, file, fields };
+		onLoadedFile: (state: State, payload: { pathname: string; file: File; tabs: Tab[] }) => {
+			const { pathname, file, tabs } = payload;
+			const fileView = { pathname, file, tabs };
 			return { ...state, fileView, folderView: undefined };
 		},
 
@@ -67,8 +67,8 @@ const model = {
 					(this as any).onLoadedFolder({ pathname, folder: content });
 				} else {
 					const res2 = await axios.get(`/api/types/${content.type}`);
-					const fields = res2.data;
-					(this as any).onLoadedFile({ pathname, file: content, fields });
+					const tabs = res2.data;
+					(this as any).onLoadedFile({ pathname, file: content, tabs });
 				}
 			} catch (err) {
 				console.error(err);

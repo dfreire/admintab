@@ -13,15 +13,15 @@ export interface FolderViewProps {
 	visibleNewFile: boolean;
 }
 
-export interface FileViewProps {
-	pathname: string;
-	file: File;
-	fields: Field[];
-}
-
 export interface Folder {
 	type: 'Folder';
 	content: string[];
+}
+
+export interface FileViewProps {
+	pathname: string;
+	file: File;
+	tabs: Tab[];
 }
 
 export interface File {
@@ -29,9 +29,15 @@ export interface File {
 	content: object;
 }
 
+export interface Tab {
+	title: string;
+	fields: Field[];
+}
+
 export interface Field {
 	type: 'text';
 	key: string;
+	tab?: string;
 }
 
 export interface TextField extends Field {
