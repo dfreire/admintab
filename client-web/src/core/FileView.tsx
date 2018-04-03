@@ -7,7 +7,6 @@ import { GlobalProps, FileViewProps, Field, TextField } from './Types';
 class FileView extends React.Component<GlobalProps, {}> {
 	render() {
 		const fileView = this.props.fileView as FileViewProps;
-		console.log('fileView', fileView);
 		const tokens = fileView.pathname.split('/').filter(t => t.length > 0);
 		const name = tokens[tokens.length - 1].split('.json')[0];
 

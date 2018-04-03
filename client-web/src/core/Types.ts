@@ -4,6 +4,7 @@ export interface GlobalProps {
 	};
 	folderView?: FolderViewProps;
 	fileView?: FileViewProps;
+	fileTypes: string[];
 }
 
 export interface FolderViewProps {

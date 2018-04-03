@@ -72,16 +72,11 @@ const App = (props1) => (
 );
 
 const mapState = (models) => {
-	return {
-		folderView: models.model.folderView,
-		fileView: models.model.fileView,
-	};
+	return { ...models.model };
 };
 
 const mapDispatch = (models) => {
-	return {
-		loadContent: models.model.loadContent,
-	};
+	return { ...models.model };
 };
 
 export default connect(mapState, mapDispatch)(App);

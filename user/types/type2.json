@@ -1,19 +1,17 @@
 [{
     "title": "EN",
     "fields": [{
-        "key": "title_en",
+        "key": "name_en",
         "type": "text",
-        "label": "Title",
-        "value": "",
+        "label": "Name",
         "isRequired": true
     }]
 }, {
     "title": "PT",
     "fields": [{
-        "key": "title_pt",
+        "key": "name_pt",
         "type": "text",
-        "label": "Title",
-        "value": "",
+        "label": "Nome",
         "isRequired": true
     }]
 }]

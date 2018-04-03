@@ -10,6 +10,7 @@ const INITIAL_STATE: State = {
 	},
 	folderView: undefined,
 	fileView: undefined,
+	fileTypes: [],
 };
 
 const model = {
@@ -36,16 +37,16 @@ const model = {
 			return { ...state, folderView };
 		},
 
-		onLoadedFolder: (state: State, payload: { pathname: string; folder: Folder }) => {
-			const { pathname, folder } = payload;
+		onLoadedFolder: (state: State, payload: { pathname: string; folder: Folder; fileTypes: string[] }) => {
+			const { pathname, folder, fileTypes } = payload;
 			const folderView = { pathname, folder, visibleNewFolder: false, visibleNewFile: false };
-			return { ...state, folderView, fileView: undefined };
+			return { ...state, fileTypes, folderView, fileView: undefined };
 		},
 
-		onLoadedFile: (state: State, payload: { pathname: string; file: File; tabs: Tab[] }) => {
-			const { pathname, file, tabs } = payload;
+		onLoadedFile: (state: State, payload: { pathname: string; file: File; tabs: Tab[]; fileTypes: string[] }) => {
+			const { pathname, file, tabs, fileTypes } = payload;
 			const fileView = { pathname, file, tabs };
-			return { ...state, fileView, folderView: undefined };
+			return { ...state, fileTypes, fileView, folderView: undefined };
 		},
 
 		onChangeFieldValue: (state: State, payload: { key: string, value: any }) => {
@@ -60,16 +61,21 @@ const model = {
 		async loadContent(payload: { pathname: string }, rootState: State) {
 			try {
 				const { pathname } = payload;
-				const res1 = await axios.get(`/api/content${pathname}`);
-				const content = res1.data;
+
+				const res1 = await axios.get('/api/types');
+				const fileTypes = res1.data;
+				
+				const res2 = await axios.get(`/api/content${pathname}`);
+				const content = res2.data;
 
 				if (content.type === 'Folder') {
-					(this as any).onLoadedFolder({ pathname, folder: content });
+					(this as any).onLoadedFolder({ pathname, folder: content, fileTypes });
 				} else {
-					const res2 = await axios.get(`/api/types/${content.type}`);
-					const tabs = res2.data;
-					(this as any).onLoadedFile({ pathname, file: content, tabs });
+					const res3 = await axios.get(`/api/types/${content.type}`);
+					const tabs = res3.data;
+					(this as any).onLoadedFile({ pathname, file: content, tabs, fileTypes });
 				}
+
 			} catch (err) {
 				console.error(err);
 			}
@@ -100,10 +106,6 @@ const model = {
 
 		async saveFile(payload: { pathname: string, file: File }, rootState: State) {
 			const { pathname, file } = payload;
-
-			console.log('saveFile pathname', pathname);
-			console.log('saveFile file', file);
-
 			await axios.post(`/api/content${pathname}`, { file });
 			(this as any).loadContent({ pathname });
 		}
