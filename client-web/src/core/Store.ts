@@ -37,6 +37,16 @@ const model = {
 			return { ...state, folderView };
 		},
 
+		onClickedRename: (state: State) => {
+			const folderView = { ...state.folderView, visibleRename: true };
+			return { ...state, folderView };
+		},
+
+		cancelRename: (state: State) => {
+			const folderView = { ...state.folderView, visibleRename: false };
+			return { ...state, folderView };
+		},
+
 		onLoadedFolder: (state: State, payload: { pathname: string; folder: Folder; fileTypes: string[] }) => {
 			const { pathname, folder, fileTypes } = payload;
 			const folderView = { pathname, folder, visibleNewFolder: false, visibleNewFile: false };
@@ -64,7 +74,7 @@ const model = {
 
 				const res1 = await axios.get('/api/types');
 				const fileTypes = res1.data;
-				
+
 				const res2 = await axios.get(`/api/content${pathname}`);
 				const content = res2.data;
 
@@ -108,7 +118,17 @@ const model = {
 			const { pathname, file } = payload;
 			await axios.post(`/api/content${pathname}`, { file });
 			(this as any).loadContent({ pathname });
-		}
+		},
+
+		async rename(payload: { pathname: string, name: string }, rootState: State) {
+			const { pathname, name } = payload;
+			const tokens = pathname.split('/');
+			tokens.pop();
+			tokens.push(`${name}.json`);
+			const source = pathname;
+			const target = tokens.join('/');
+			await axios.post(`/api/mv`, { source, target });
+		},
 	},
 };
 

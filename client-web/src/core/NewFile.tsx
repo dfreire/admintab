@@ -44,11 +44,11 @@ class NewFile extends React.Component<GlobalProps, State> {
 						help={slug(this.state.name)}
 					>
 						<Select
-							placeholder="File Type"
-							onChange={(type: string) => this.setState({type})}
+							placeholder="Type"
+							onChange={(type: string) => this.setState({ type })}
 						>
 							{this.props.fileTypes.map(type => (
-								<Select.Option key={type} value={type}>{type} </Select.Option>
+								<Select.Option key={type}  value={type}>{type}</Select.Option>
 							))}
 						</Select>
 					</Form.Item>
@@ -59,11 +59,12 @@ class NewFile extends React.Component<GlobalProps, State> {
 
 	_onOk = () => {
 		const folderView = this.props.folderView as FolderViewProps;
-		model.createNewFile({
-			pathname: folderView.pathname,
-			name: slug(this.state.name),
-			type: this.state.type,
-		});
+		const { pathname } = folderView;
+		const name = slug(this.state.name);
+		const type = this.state.type || '';
+		if (name.length > 0 && type.length > 0) {
+			model.createNewFile({ pathname, name, type });
+		}
 	}
 }
 

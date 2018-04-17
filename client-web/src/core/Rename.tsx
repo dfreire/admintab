@@ -9,7 +9,7 @@ interface State {
 	name: string;
 }
 
-class NewFolder extends React.Component<GlobalProps, State> {
+class Rename extends React.Component<GlobalProps, State> {
 	state = {
 		name: '',
 	} as State;
@@ -19,10 +19,10 @@ class NewFolder extends React.Component<GlobalProps, State> {
 
 		return (
 			<Modal
-				title="New Folder"
-				visible={folderView.visibleNewFolder}
+				title="Rename"
+				visible={folderView.visibleRename}
 				onOk={this._onOk}
-				onCancel={model.cancelNewFolder}
+				onCancel={model.cancelRename}
 			>
 				<Form>
 					<Form.Item
@@ -47,9 +47,9 @@ class NewFolder extends React.Component<GlobalProps, State> {
 		const name = slug(this.state.name);
 
 		if (name.length > 0) {
-			model.createNewFolder({ pathname, name });
+			model.rename({ pathname, name });
 		}
 	}
 }
 
-export default NewFolder;
+export default Rename;

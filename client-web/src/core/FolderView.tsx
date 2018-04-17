@@ -6,6 +6,7 @@ const model = (dispatch as any).model;
 import { GlobalProps, FolderViewProps } from './Types';
 import NewFolder from './NewFolder';
 import NewFile from './NewFile';
+import Rename from './Rename';
 
 interface State {
 	selectedRowKeys: string[] | number[];
@@ -36,6 +37,7 @@ class FolderView extends React.Component<GlobalProps, State> {
 				</div>
 				<NewFolder {...this.props} />
 				<NewFile {...this.props} />
+				<Rename {...this.props} />
 			</div>
 		);
 	}

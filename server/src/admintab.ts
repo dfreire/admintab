@@ -55,6 +55,11 @@ app.get('/api/types/:type', (req: express.Request, res: express.Response) => {
 	res.sendFile(path.join(userDir, 'types', `${type}.json`));
 });
 
+app.post('/api/mv', async (req: express.Request, res: express.Response) => {
+	const { source, target } = req.body;
+	await sh.mkdir('mv', path.join(userDir, 'content', source), path.join(userDir, 'content', target));
+});
+
 app.get('/api/echo', jwtMiddleware, (req: express.Request, res: express.Response) => {
 	console.log('req.user', req['user']); // contains the jwtPayload
 	res.send(req.query);
