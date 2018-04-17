@@ -16,9 +16,8 @@ class Rename extends React.Component<GlobalProps, State> {
 
 	componentDidUpdate() {
 		const folderView = this.props.folderView as FolderViewProps;
-		console.log('componentDidUpdate', folderView.selection);
-		if (folderView.visibleRename === false && folderView.selection.length === 1) {
-			// onOpen
+		const isBeforeOpening = folderView.visibleRename === false && folderView.selection.length === 1;
+		if (isBeforeOpening) {
 			const name = folderView.selection[0].split('.')[0];
 			if (name !== this.state.name) {
 				this.setState({ name });

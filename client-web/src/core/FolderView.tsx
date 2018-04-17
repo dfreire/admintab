@@ -82,6 +82,13 @@ class FolderView extends React.Component<GlobalProps, {}> {
 						model.onSelection({ selection: selectedRowKeys });
 					},
 				}}
+				onRow={(record) => {
+					return {
+						onClick: () => {
+							model.onSelection({ selection: [record.key] });
+						}
+					};
+				}}
 				columns={[{
 					title: 'Name',
 					dataIndex: 'name',
