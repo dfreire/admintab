@@ -140,6 +140,13 @@ const model = {
 			await axios.post(`/api/mv`, { source, target });
 			(this as any).loadContent({ pathname });
 		},
+
+		async remove(payload: { pathname: string, selection: string }, rootState: State) {
+			const { pathname, selection } = payload;
+			const _pathname = pathname + selection;
+			await axios.post(`/api/rm`, { pathname: _pathname });
+			(this as any).loadContent({ pathname });
+		},
 	},
 };
 

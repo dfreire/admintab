@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col, Table, Icon, Button, Dropdown, Menu } from 'antd';
+import { Row, Col, Table, Icon, Button, Dropdown, Menu, Modal } from 'antd';
 import { dispatch } from '@rematch/core';
 const model = (dispatch as any).model;
 import { GlobalProps, FolderViewProps } from './Types';
@@ -11,7 +11,6 @@ import Rename from './Rename';
 class FolderView extends React.Component<GlobalProps, {}> {
 	render() {
 		const folderView = this.props.folderView as FolderViewProps;
-		console.log('selection', folderView.selection);
 		const tokens = folderView.pathname.split('/').filter(t => t.length > 0);
 		const title = tokens.length > 0 ? tokens[tokens.length - 1] : 'AdminTab';
 
@@ -38,24 +37,40 @@ class FolderView extends React.Component<GlobalProps, {}> {
 	_renderActions = () => {
 		const folderView = this.props.folderView as FolderViewProps;
 		const selectionLen = folderView.selection.length;
+		const removeTitle = selectionLen === 1
+			? 'Are you sure you want to remove the item?'
+			: 'Are you sure you want to remove the items?';
 
 		const menu = (
 			<Menu
 				onClick={({ item, key, keyPath }) => {
-					model[key]();
+					if (key === 'onClickedRemove') {
+						Modal.confirm({
+							title: removeTitle,
+							content: folderView.selection.join(', '),
+							okText: 'Yes',
+							cancelText: 'No',
+							onOk() {
+								const { pathname, selection } = folderView;
+								model.remove({ pathname, selection });
+							},
+						});
+					} else {
+						model[key]();
+					}
 				}}
 			>
 				<Menu.Item key="onClickedNewFile">New File</Menu.Item>
 				<Menu.Item key="onClickedNewFolder">New Folder</Menu.Item>
-				<Menu.Item key="onClickedUpload">Upload</Menu.Item>
+				<Menu.Item key="onClickedUpload" disabled={true}>Upload</Menu.Item>
 				<Menu.Divider />
 				<Menu.Item key="onClickedRename" disabled={selectionLen !== 1}>Rename</Menu.Item>
 				<Menu.Divider />
-				<Menu.Item key="onClickedCut" disabled={selectionLen === 0}>Cut</Menu.Item>
-				<Menu.Item key="onClickedCopy" disabled={selectionLen === 0}>Copy</Menu.Item>
-				<Menu.Item key="onClickedPaste">Paste</Menu.Item>
+				<Menu.Item key="onClickedCut" disabled={true}>Cut</Menu.Item>
+				<Menu.Item key="onClickedCopy" disabled={true}>Copy</Menu.Item>
+				<Menu.Item key="onClickedPaste" disabled={true}>Paste</Menu.Item>
 				<Menu.Divider />
-				<Menu.Item key="onClickedRemove">Remove</Menu.Item>
+				<Menu.Item key="onClickedRemove" disabled={selectionLen === 0}>{`Remove (${selectionLen})`}</Menu.Item>
 			</Menu>
 		);
 

@@ -68,6 +68,17 @@ app.post('/api/mv', async (req: express.Request, res: express.Response) => {
 	}
 });
 
+app.post('/api/rm', async (req: express.Request, res: express.Response) => {
+	const { pathname } = req.body;
+	try {
+		await sh.rm('-rf', path.join(userDir, 'content', pathname));
+		res.send();
+	} catch (err) {
+		console.log('/api/rm err', err);
+		res.status(500).send();
+	}
+});
+
 app.get('/api/echo', jwtMiddleware, (req: express.Request, res: express.Response) => {
 	console.log('req.user', req['user']); // contains the jwtPayload
 	res.send(req.query);
