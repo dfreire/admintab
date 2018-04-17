@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col, Table, Icon, Button, Dropdown, Menu, Modal } from 'antd';
+import { Row, Col, Table, Icon, Button, Dropdown, Menu, Modal, Upload } from 'antd';
 import { dispatch } from '@rematch/core';
 const model = (dispatch as any).model;
 import { GlobalProps, FolderViewProps } from './Types';
@@ -44,7 +44,9 @@ class FolderView extends React.Component<GlobalProps, {}> {
 		const menu = (
 			<Menu
 				onClick={({ item, key, keyPath }) => {
-					if (key === 'onClickedRemove') {
+					if (key === 'onClickedUpload') {
+						return;
+					} else if (key === 'onClickedRemove') {
 						Modal.confirm({
 							title: removeTitle,
 							content: folderView.selection.join(', '),
@@ -62,7 +64,22 @@ class FolderView extends React.Component<GlobalProps, {}> {
 			>
 				<Menu.Item key="onClickedNewFile">New File</Menu.Item>
 				<Menu.Item key="onClickedNewFolder">New Folder</Menu.Item>
-				<Menu.Item key="onClickedUpload" disabled={true}>Upload</Menu.Item>
+				<Menu.Item key="onClickedUpload">
+					<Upload
+						name="files"
+						multiple={true}
+						showUploadList={false}
+						action={`/api/upload${folderView.pathname}`}
+						headers={{
+							authorization: 'authorization-text',
+						}}
+						onChange={(info => {
+							console.log('info.file', info.file);
+						})}
+					>
+						Upload
+					</Upload>
+				</Menu.Item>
 				<Menu.Divider />
 				<Menu.Item key="onClickedRename" disabled={selectionLen !== 1}>Rename</Menu.Item>
 				<Menu.Divider />
@@ -71,7 +88,7 @@ class FolderView extends React.Component<GlobalProps, {}> {
 				<Menu.Item key="onClickedPaste" disabled={true}>Paste</Menu.Item>
 				<Menu.Divider />
 				<Menu.Item key="onClickedRemove" disabled={selectionLen === 0}>{`Remove (${selectionLen})`}</Menu.Item>
-			</Menu>
+			</Menu >
 		);
 
 		return (
@@ -109,9 +126,21 @@ class FolderView extends React.Component<GlobalProps, {}> {
 					dataIndex: 'name',
 					render: (name: string) => {
 						const url = '/' + [...tokens, name].join('/');
-						return (
-							<Link style={{ fontWeight: name.endsWith('.json') ? 'normal' : 'bold' }} to={url}>{name}</Link>
-						);
+
+						if (url.indexOf('.') === -1 || url.endsWith('.json')) {
+							return (
+								<Link style={{ fontWeight: 'normal' }} to={url}>{name}</Link>
+							);
+						} else if (url.indexOf('.') === -1 || url.endsWith('.json')) {
+							return (
+								<Link style={{ fontWeight: 'bold' }} to={url}>{name}</Link>
+							);
+						} else {
+							const urlStatic = url.replace('content', 'static');
+							return (
+								<a style={{ fontWeight: 'normal' }} href={urlStatic}>{name}</a>
+							);
+						}
 					}
 				}]}
 				dataSource={folderView.folder.content.map(name => ({ key: name, name }))}

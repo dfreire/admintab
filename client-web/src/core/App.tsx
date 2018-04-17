@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BrowserRouter, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Route, Link, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Breadcrumb, Layout } from 'antd';
 import 'antd/dist/antd.css';
@@ -56,10 +56,14 @@ class AppView extends React.Component<GlobalProps, {}> {
 	}
 
 	_renderContent = () => {
+		const isFolderView = this.props.folderView != null;
+		const isFileView = this.props.fileView != null;
+
 		return (
 			<Layout.Content style={{ background: '#fff', padding: 20 }}>
-				{this.props.folderView != null && <FolderView {...this.props} />}
-				{this.props.fileView != null && <FileView {...this.props} />}
+				{isFolderView && <FolderView {...this.props} />}
+				{isFileView && <FileView {...this.props} />}
+				{!isFolderView && !isFileView && <div>Woot!?</div>}
 			</Layout.Content>
 		);
 	}
@@ -67,7 +71,10 @@ class AppView extends React.Component<GlobalProps, {}> {
 
 const App = (props1) => (
 	<BrowserRouter>
-		<Route render={(props2) => <AppView {...props1} {...props2} />} />
+		<Switch>
+			<Route path="/content" render={(props2) => <AppView {...props1} {...props2} />} />
+			<Redirect from="/" exact={true} to="/content" />
+		</Switch>
 	</BrowserRouter>
 );
 

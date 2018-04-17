@@ -7,12 +7,16 @@ import * as sh from 'shelljs';
 import * as slug from 'slugg';
 import { createJwtMiddleware, createJwtToken } from './jwt';
 import { config } from './config';
+import * as multer from 'multer';
+
 
 console.log(`+++ ${config.env} +++`, );
 // console.log('token', createJwtToken({}));
 
 const app = express();
 const userDir = path.join(process.cwd(), config.userDir);
+const uploadDir = path.join(process.cwd(), config.uploadDir);
+const upload = multer({ dest: uploadDir });
 // app.use(express.static(userDir));
 app.use(passport.initialize());
 app.use(bodyParser.json());
@@ -21,8 +25,8 @@ const jwtMiddleware = createJwtMiddleware();
 
 app.get('/api/content/*', async (req: express.Request, res: express.Response) => {
 	const pathname = req.params[0];
-	const items = await sh.ls('-l', path.join(userDir, 'content', pathname));
-	if (items.length === 1 && pathname.endsWith('.json')) {
+	const items = await sh.ls('-l', path.join(userDir, pathname));
+	if (items.length === 1 && pathname.indexOf('.') !== -1) {
 		res.sendFile(items[0]['name']);
 	} else {
 		res.send({
@@ -37,10 +41,10 @@ app.post('/api/content/*', async (req: express.Request, res: express.Response) =
 	if (pathname.endsWith('.json')) {
 		// file
 		const { file } = req.body;
-		await fs.outputJson(path.join(userDir, 'content', pathname), file);
+		await fs.outputJson(path.join(userDir, pathname), file);
 	} else {
 		// folder
-		await sh.mkdir('-p', path.join(userDir, 'content', pathname));
+		await sh.mkdir('-p', path.join(userDir, pathname));
 	}
 	res.send({ pathname });
 });
@@ -58,8 +62,8 @@ app.get('/api/types/:type', (req: express.Request, res: express.Response) => {
 app.post('/api/mv', async (req: express.Request, res: express.Response) => {
 	const { source, target } = req.body;
 	try {
-		const _source = path.join(userDir, 'content', source);
-		const _target = path.join(userDir, 'content', target);
+		const _source = path.join(userDir, source);
+		const _target = path.join(userDir, target);
 		await sh.mv(_source, _target);
 		res.send();
 	} catch (err) {
@@ -71,12 +75,34 @@ app.post('/api/mv', async (req: express.Request, res: express.Response) => {
 app.post('/api/rm', async (req: express.Request, res: express.Response) => {
 	const { pathname } = req.body;
 	try {
-		await sh.rm('-rf', path.join(userDir, 'content', pathname));
+		await sh.rm('-rf', path.join(userDir, pathname));
 		res.send();
 	} catch (err) {
 		console.log('/api/rm err', err);
 		res.status(500).send();
 	}
+});
+
+app.post('/api/upload/*', upload.array('files'), async (req: express.Request, res: express.Response) => {
+	const pathname = req.params[0];
+
+	console.log('req.files', req.files);
+	console.log('req.body', req.body);
+
+	for (let file of req.files as Express.Multer.File[]) {
+		const tokens = file.originalname.split('.');
+		const name = slug(tokens[0]);
+		const ext = slug(tokens[1]);
+		await sh.mv(file.path, path.join(userDir, pathname, `${name}.${ext}`));
+	}
+
+	res.send();
+});
+
+app.get('/static/*', async (req: express.Request, res: express.Response) => {
+	const pathname = req.params[0];
+	console.log('here', pathname);
+	res.sendFile(path.join(userDir, 'content', pathname));
 });
 
 app.get('/api/echo', jwtMiddleware, (req: express.Request, res: express.Response) => {

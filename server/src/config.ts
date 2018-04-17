@@ -5,6 +5,7 @@ export interface Config {
     port: number;
     jwtSecret: string;
     userDir: string;
+    uploadDir: string;
 }
 
 const { NODE_ENV } = process.env;

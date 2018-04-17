@@ -135,15 +135,15 @@ const model = {
 
 		async rename(payload: { pathname: string, oldName: string, newName: string }, rootState: State) {
 			const { pathname, oldName, newName } = payload;
-			const source = pathname + oldName;
-			const target = pathname + newName;
+			const source = pathname + '/' + oldName;
+			const target = pathname + '/' + newName;
 			await axios.post(`/api/mv`, { source, target });
 			(this as any).loadContent({ pathname });
 		},
 
 		async remove(payload: { pathname: string, selection: string }, rootState: State) {
 			const { pathname, selection } = payload;
-			const _pathname = pathname + selection;
+			const _pathname = pathname + '/' + selection;
 			await axios.post(`/api/rm`, { pathname: _pathname });
 			(this as any).loadContent({ pathname });
 		},
