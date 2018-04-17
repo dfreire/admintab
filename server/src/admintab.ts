@@ -73,9 +73,11 @@ app.post('/api/mv', async (req: express.Request, res: express.Response) => {
 });
 
 app.post('/api/rm', async (req: express.Request, res: express.Response) => {
-	const { pathname } = req.body;
+	const { pathnames } = req.body;
 	try {
-		await sh.rm('-rf', path.join(userDir, pathname));
+		for (let pathname of pathnames) {
+			await sh.rm('-rf', path.join(userDir, pathname));
+		}
 		res.send();
 	} catch (err) {
 		console.log('/api/rm err', err);

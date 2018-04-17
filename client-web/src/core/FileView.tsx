@@ -7,14 +7,14 @@ import { GlobalProps, FileViewProps, Field, TextField } from './Types';
 class FileView extends React.Component<GlobalProps, {}> {
 	render() {
 		const fileView = this.props.fileView as FileViewProps;
-		const tokens = fileView.pathname.split('/').filter(t => t.length > 0);
-		const name = tokens[tokens.length - 1].split('.json')[0];
+		// const tokens = fileView.pathname.split('/').filter(t => t.length > 0);
+		// const name = tokens[tokens.length - 1].split('.json')[0];
 
 		return (
 			<div>
 				<Row type="flex" align="middle">
 					<Col span={12}>
-						<h1>{name}</h1>
+						{/* <h1>{name}</h1> */}
 					</Col>
 					<Col span={12} />
 				</Row>

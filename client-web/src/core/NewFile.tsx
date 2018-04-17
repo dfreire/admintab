@@ -48,7 +48,7 @@ class NewFile extends React.Component<GlobalProps, State> {
 							onChange={(type: string) => this.setState({ type })}
 						>
 							{this.props.fileTypes.map(type => (
-								<Select.Option key={type}  value={type}>{type}</Select.Option>
+								<Select.Option key={type} value={type}>{type}</Select.Option>
 							))}
 						</Select>
 					</Form.Item>
@@ -63,6 +63,10 @@ class NewFile extends React.Component<GlobalProps, State> {
 		const name = slug(this.state.name);
 		const type = this.state.type || '';
 		if (name.length > 0 && type.length > 0) {
+			this.setState({
+				name: '',
+				type: undefined,
+			});
 			model.createNewFile({ pathname, name, type });
 		}
 	}

@@ -63,7 +63,6 @@ class AppView extends React.Component<GlobalProps, {}> {
 			<Layout.Content style={{ background: '#fff', padding: 20 }}>
 				{isFolderView && <FolderView {...this.props} />}
 				{isFileView && <FileView {...this.props} />}
-				{!isFolderView && !isFileView && <div>Woot!?</div>}
 			</Layout.Content>
 		);
 	}

@@ -31,6 +31,7 @@ class NewFolder extends React.Component<GlobalProps, State> {
 						help={slug(this.state.name)}
 					>
 						<Input
+							autoFocus={true}
 							placeholder="New Folder"
 							value={this.state.name}
 							onChange={(evt) => this.setState({ name: evt.target.value })}
@@ -47,6 +48,9 @@ class NewFolder extends React.Component<GlobalProps, State> {
 		const name = slug(this.state.name);
 
 		if (name.length > 0) {
+			this.setState({
+				name: '',
+			});
 			model.createNewFolder({ pathname, name });
 		}
 	}

@@ -141,10 +141,10 @@ const model = {
 			(this as any).loadContent({ pathname });
 		},
 
-		async remove(payload: { pathname: string, selection: string }, rootState: State) {
+		async remove(payload: { pathname: string, selection: string[] }, rootState: State) {
 			const { pathname, selection } = payload;
-			const _pathname = pathname + '/' + selection;
-			await axios.post(`/api/rm`, { pathname: _pathname });
+			const pathnames = selection.map(s => pathname + '/' + s);
+			await axios.post(`/api/rm`, { pathnames });
 			(this as any).loadContent({ pathname });
 		},
 	},

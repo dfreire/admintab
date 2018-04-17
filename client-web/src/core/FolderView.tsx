@@ -12,13 +12,13 @@ class FolderView extends React.Component<GlobalProps, {}> {
 	render() {
 		const folderView = this.props.folderView as FolderViewProps;
 		const tokens = folderView.pathname.split('/').filter(t => t.length > 0);
-		const title = tokens.length > 0 ? tokens[tokens.length - 1] : 'AdminTab';
+		// const title = tokens.length > 0 ? tokens[tokens.length - 1] : 'AdminTab';
 
 		return (
 			<div>
 				<Row type="flex" align="middle">
 					<Col span={12}>
-						<h1>{title}</h1>
+						{/* <h1>{title}</h1> */}
 					</Col>
 					<Col span={12}>
 						{this._renderActions()}
@@ -127,13 +127,13 @@ class FolderView extends React.Component<GlobalProps, {}> {
 					render: (name: string) => {
 						const url = '/' + [...tokens, name].join('/');
 
-						if (url.indexOf('.') === -1 || url.endsWith('.json')) {
-							return (
-								<Link style={{ fontWeight: 'normal' }} to={url}>{name}</Link>
-							);
-						} else if (url.indexOf('.') === -1 || url.endsWith('.json')) {
+						if (url.indexOf('.') === -1 ) {
 							return (
 								<Link style={{ fontWeight: 'bold' }} to={url}>{name}</Link>
+							);
+						} else if (url.endsWith('.json')) {
+							return (
+								<Link style={{ fontWeight: 'normal' }} to={url}>{name}</Link>
 							);
 						} else {
 							const urlStatic = url.replace('content', 'static');
