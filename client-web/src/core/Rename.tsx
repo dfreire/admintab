@@ -14,6 +14,18 @@ class Rename extends React.Component<GlobalProps, State> {
 		name: '',
 	} as State;
 
+	componentDidUpdate() {
+		const folderView = this.props.folderView as FolderViewProps;
+		console.log('componentDidUpdate', folderView.selection);
+		if (folderView.visibleRename === false && folderView.selection.length === 1) {
+			// onOpen
+			const name = folderView.selection[0].split('.')[0];
+			if (name !== this.state.name) {
+				this.setState({ name });
+			}
+		}
+	}
+
 	render() {
 		const folderView = this.props.folderView as FolderViewProps;
 
@@ -42,12 +54,15 @@ class Rename extends React.Component<GlobalProps, State> {
 	}
 
 	_onOk = () => {
-		const folderView = this.props.folderView as FolderViewProps;
-		const { pathname } = folderView;
-		const name = slug(this.state.name);
+		const _name = slug(this.state.name);
 
-		if (name.length > 0) {
-			model.rename({ pathname, name });
+		if (_name.length > 0) {
+			const folderView = this.props.folderView as FolderViewProps;
+			const { pathname } = folderView;
+			const oldName = folderView.selection[0];
+			const oldExt = oldName.split('.')[1];
+			const newName = oldExt == null ? _name : _name + '.' + oldExt;
+			model.rename({ pathname, oldName, newName });
 		}
 	}
 }

@@ -8,17 +8,10 @@ import NewFolder from './NewFolder';
 import NewFile from './NewFile';
 import Rename from './Rename';
 
-interface State {
-	selectedRowKeys: string[] | number[];
-}
-
-class FolderView extends React.Component<GlobalProps, State> {
-	state = {
-		selectedRowKeys: [],
-	} as State;
-
+class FolderView extends React.Component<GlobalProps, {}> {
 	render() {
 		const folderView = this.props.folderView as FolderViewProps;
+		console.log('selection', folderView.selection);
 		const tokens = folderView.pathname.split('/').filter(t => t.length > 0);
 		const title = tokens.length > 0 ? tokens[tokens.length - 1] : 'AdminTab';
 
@@ -43,6 +36,9 @@ class FolderView extends React.Component<GlobalProps, State> {
 	}
 
 	_renderActions = () => {
+		const folderView = this.props.folderView as FolderViewProps;
+		const selectionLen = folderView.selection.length;
+
 		const menu = (
 			<Menu
 				onClick={({ item, key, keyPath }) => {
@@ -53,10 +49,10 @@ class FolderView extends React.Component<GlobalProps, State> {
 				<Menu.Item key="onClickedNewFolder">New Folder</Menu.Item>
 				<Menu.Item key="onClickedUpload">Upload</Menu.Item>
 				<Menu.Divider />
-				<Menu.Item key="onClickedRename">Rename</Menu.Item>
+				<Menu.Item key="onClickedRename" disabled={selectionLen !== 1}>Rename</Menu.Item>
 				<Menu.Divider />
-				<Menu.Item key="onClickedCut">Cut</Menu.Item>
-				<Menu.Item key="onClickedCopy">Copy</Menu.Item>
+				<Menu.Item key="onClickedCut" disabled={selectionLen === 0}>Cut</Menu.Item>
+				<Menu.Item key="onClickedCopy" disabled={selectionLen === 0}>Copy</Menu.Item>
 				<Menu.Item key="onClickedPaste">Paste</Menu.Item>
 				<Menu.Divider />
 				<Menu.Item key="onClickedRemove">Remove</Menu.Item>
@@ -81,9 +77,9 @@ class FolderView extends React.Component<GlobalProps, State> {
 			<Table
 				size="middle"
 				rowSelection={{
-					selectedRowKeys: this.state.selectedRowKeys,
+					selectedRowKeys: folderView.selection,
 					onChange: (selectedRowKeys, selectedRows) => {
-						this.setState({ selectedRowKeys });
+						model.onSelection({ selection: selectedRowKeys });
 					},
 				}}
 				columns={[{

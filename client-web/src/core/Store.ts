@@ -17,6 +17,12 @@ const model = {
 	state: { ...INITIAL_STATE },
 
 	reducers: {
+		onSelection: (state: State, payload: { selection: string[] }) => {
+			const { selection } = payload;
+			const folderView = { ...state.folderView, selection };
+			return { ...state, folderView };
+		},
+
 		onClickedNewFolder: (state: State) => {
 			const folderView = { ...state.folderView, visibleNewFolder: true };
 			return { ...state, folderView };
@@ -49,7 +55,14 @@ const model = {
 
 		onLoadedFolder: (state: State, payload: { pathname: string; folder: Folder; fileTypes: string[] }) => {
 			const { pathname, folder, fileTypes } = payload;
-			const folderView = { pathname, folder, visibleNewFolder: false, visibleNewFile: false };
+			const folderView = {
+				pathname,
+				folder,
+				visibleNewFolder: false,
+				visibleNewFile: false,
+				visibleRename: false,
+				selection: []
+			};
 			return { ...state, fileTypes, folderView, fileView: undefined };
 		},
 
@@ -120,14 +133,12 @@ const model = {
 			(this as any).loadContent({ pathname });
 		},
 
-		async rename(payload: { pathname: string, name: string }, rootState: State) {
-			const { pathname, name } = payload;
-			const tokens = pathname.split('/');
-			tokens.pop();
-			tokens.push(`${name}.json`);
-			const source = pathname;
-			const target = tokens.join('/');
+		async rename(payload: { pathname: string, oldName: string, newName: string }, rootState: State) {
+			const { pathname, oldName, newName } = payload;
+			const source = pathname + oldName;
+			const target = pathname + newName;
 			await axios.post(`/api/mv`, { source, target });
+			(this as any).loadContent({ pathname });
 		},
 	},
 };

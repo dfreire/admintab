@@ -57,7 +57,15 @@ app.get('/api/types/:type', (req: express.Request, res: express.Response) => {
 
 app.post('/api/mv', async (req: express.Request, res: express.Response) => {
 	const { source, target } = req.body;
-	await sh.mkdir('mv', path.join(userDir, 'content', source), path.join(userDir, 'content', target));
+	try {
+		const _source = path.join(userDir, 'content', source);
+		const _target = path.join(userDir, 'content', target);
+		await sh.mv(_source, _target);
+		res.send();
+	} catch (err) {
+		console.log('/api/mv err', err);
+		res.status(500).send();
+	}
 });
 
 app.get('/api/echo', jwtMiddleware, (req: express.Request, res: express.Response) => {

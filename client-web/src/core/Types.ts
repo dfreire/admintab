@@ -13,6 +13,7 @@ export interface FolderViewProps {
 	visibleNewFolder: boolean;
 	visibleNewFile: boolean;
 	visibleRename: boolean;
+	selection: string[];
 }
 
 export interface Folder {
