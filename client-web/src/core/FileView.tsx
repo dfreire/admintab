@@ -102,15 +102,15 @@ class FileView extends React.Component<GlobalProps, {}> {
 					min={field.min}
 					max={field.max}
 					formatter={(value: number | string) => {
-						const result = value == null ? value : numeral(value.toString()).format(field.format);
-						console.log('formatter', value, typeof value, result);
+						const result = (value == null || value === '') ? value : numeral(value.toString()).format(field.format);
+						// console.log('formatter', value, typeof value, result);
 						return result;
 					}}
 					parser={(valueStr: string) => {
 						const tokens = valueStr.split('.');
 						valueStr = tokens[0] + '.' + tokens.slice(1).join('');
 						const result = numeral(valueStr).value();
-						console.log('parser', valueStr, typeof valueStr, result);
+						// console.log('parser', valueStr, typeof valueStr, result);
 						return result;
 					}}
 					onChange={(value: number | string) => model.onChangeFieldValue({ key, value })}
