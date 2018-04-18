@@ -38,7 +38,7 @@ export interface Tab {
 }
 
 export interface Field {
-	type: 'text' | 'textarea';
+	type: 'text' | 'textarea' | 'number';
 	key: string;
 	tab?: string;
 }
@@ -54,5 +54,16 @@ export interface TextAreaField extends Field {
 	type: 'textarea';
 	label: string;
 	value?: string;
+	isRequired?: boolean;
+}
+
+export interface NumberField extends Field {
+	type: 'number';
+	label: string;
+	value?: number;
+	precision?: number;
+	step?: number;
+	min?: number;
+	max?: number;
 	isRequired?: boolean;
 }

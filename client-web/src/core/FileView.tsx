@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Row, Col, Tabs, Form, Input, Button } from 'antd';
+import { Row, Col, Tabs, Form, Input, InputNumber, Button } from 'antd';
 import { dispatch } from '@rematch/core';
 const model = (dispatch as any).model;
-import { GlobalProps, FileViewProps, Field, TextField, TextAreaField } from './Types';
+import { GlobalProps, FileViewProps, Field, TextField, TextAreaField, NumberField } from './Types';
 
 class FileView extends React.Component<GlobalProps, {}> {
 	render() {
@@ -80,6 +80,27 @@ class FileView extends React.Component<GlobalProps, {}> {
 						minRows: 3,
 						maxRows: 25,
 					}}
+				/>
+			</Form.Item>
+		);
+	}
+
+	_renderNumberField = (field: NumberField) => {
+		const fileView = this.props.fileView as FileViewProps;
+		const { key, label } = field;
+		const { content } = fileView.file;
+
+		return (
+			<Form.Item key={key} label={label}>
+				<InputNumber
+					value={content[key]}
+					precision={field.precision}
+					step={field.step}
+					min={field.min}
+					max={field.max}
+					formatter={(value: number | string) => value.toString()}
+					parser={(valueStr: string) => parseInt(valueStr, 10)}
+					onChange={(value: number | string) => model.onChangeFieldValue({ key, value })}
 				/>
 			</Form.Item>
 		);
