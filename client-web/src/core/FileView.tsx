@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Row, Col, Tabs, Form, Input, Button } from 'antd';
 import { dispatch } from '@rematch/core';
 const model = (dispatch as any).model;
-import { GlobalProps, FileViewProps, Field, TextField } from './Types';
+import { GlobalProps, FileViewProps, Field, TextField, TextAreaField } from './Types';
 
 class FileView extends React.Component<GlobalProps, {}> {
 	render() {
@@ -43,6 +43,8 @@ class FileView extends React.Component<GlobalProps, {}> {
 		switch (field.type) {
 			case 'text':
 				return this._renderTextField(field as TextField);
+			case 'textarea':
+				return this._renderTextAreaField(field as TextAreaField);
 			default:
 				return false;
 		}
@@ -59,6 +61,25 @@ class FileView extends React.Component<GlobalProps, {}> {
 					type="text"
 					value={content[key]}
 					onChange={(evt) => model.onChangeFieldValue({ key, value: evt.target.value })}
+				/>
+			</Form.Item>
+		);
+	}
+
+	_renderTextAreaField = (field: TextAreaField) => {
+		const fileView = this.props.fileView as FileViewProps;
+		const { key, label } = field;
+		const { content } = fileView.file;
+
+		return (
+			<Form.Item key={key} label={label}>
+				<Input.TextArea
+					value={content[key]}
+					onChange={(evt) => model.onChangeFieldValue({ key, value: evt.target.value })}
+					autosize={{
+						minRows: 3,
+						maxRows: 25,
+					}}
 				/>
 			</Form.Item>
 		);

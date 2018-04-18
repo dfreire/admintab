@@ -38,13 +38,20 @@ export interface Tab {
 }
 
 export interface Field {
-	type: 'text';
+	type: 'text' | 'textarea';
 	key: string;
 	tab?: string;
 }
 
 export interface TextField extends Field {
 	type: 'text';
+	label: string;
+	value?: string;
+	isRequired?: boolean;
+}
+
+export interface TextAreaField extends Field {
+	type: 'textarea';
 	label: string;
 	value?: string;
 	isRequired?: boolean;
