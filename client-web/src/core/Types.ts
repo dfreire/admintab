@@ -65,5 +65,6 @@ export interface NumberField extends Field {
 	step?: number;
 	min?: number;
 	max?: number;
+	format?: string;
 	isRequired?: boolean;
 }
